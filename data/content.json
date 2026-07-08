@@ -67,25 +67,25 @@
     {
       "id": "instagram",
       "label": "Instagram",
-      "url": "https://instagram.com/rhulengsoc",
+      "url": "https://instagram.com/rhul.engsoc",
       "icon": "instagram"
     },
     {
       "id": "discord",
       "label": "Discord",
-      "url": "https://discord.gg/",
+      "url": "https://discord.gg/gYDRP2DUqN",
       "icon": "discord"
     },
     {
       "id": "email",
       "label": "Email Us",
-      "url": "mailto:engsoc@su.rhul.ac.uk",
+      "url": "mailto:engineering@royalholloway.su",
       "icon": "email"
     },
     {
       "id": "su-page",
       "label": "Students' Union Page",
-      "url": "https://su.rhul.ac.uk/",
+      "url": "https://www.su.rhul.ac.uk/societies/a-z/engineering/",
       "icon": "website"
     }
   ]
