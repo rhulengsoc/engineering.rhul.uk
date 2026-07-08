@@ -1,0 +1,59 @@
+{
+  "society": {
+    "name": "Royal Holloway Engineering Society",
+    "shortName": "RHUL EngSoc",
+    "tagline": "Building, tinkering, and connecting engineers at Royal Holloway.",
+    "description": "The Royal Holloway Engineering Society brings together students who are curious about how things are designed, built, and made better. Whether you're studying engineering, physics, computer science, or you just like taking things apart, EngSoc is your home for hands-on projects, industry talks, and a community of people who like to build stuff.",
+    "mission": "We exist to make engineering at Royal Holloway more hands-on, more social, and more connected to industry — through workshops, projects, socials, and talks from working engineers.",
+    "email": "engsoc@su.rhul.ac.uk",
+    "instagramHandle": "@rhulengsoc"
+  },
+  "highlights": [
+    {
+      "id": "workshops",
+      "title": "Workshops",
+      "description": "Regular hands-on sessions covering electronics, CAD, robotics, and more — no experience required."
+    },
+    {
+      "id": "talks",
+      "title": "Industry Talks",
+      "description": "Hear from practising engineers about what real-world engineering careers actually look like."
+    },
+    {
+      "id": "projects",
+      "title": "Projects",
+      "description": "Team up with other members to build things throughout the year, from small builds to bigger showcase projects."
+    },
+    {
+      "id": "socials",
+      "title": "Socials",
+      "description": "Because engineering is more fun with people. Regular socials to meet the rest of the society."
+    }
+  ],
+  "links": [
+    {
+      "id": "instagram",
+      "label": "Instagram",
+      "url": "https://instagram.com/rhulengsoc",
+      "icon": "instagram"
+    },
+    {
+      "id": "discord",
+      "label": "Discord",
+      "url": "https://discord.gg/",
+      "icon": "discord"
+    },
+    {
+      "id": "email",
+      "label": "Email Us",
+      "url": "mailto:engsoc@su.rhul.ac.uk",
+      "icon": "email"
+    },
+    {
+      "id": "su-page",
+      "label": "Students' Union Page",
+      "url": "https://su.rhul.ac.uk/",
+      "icon": "website"
+    }
+  ]
+}
