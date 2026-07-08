@@ -20,12 +20,12 @@ export default function CommitteePage() {
           <div key={member.id} className="flex flex-col gap-2 bg-surface p-6">
             <div>
               <h2 className="font-medium text-foreground">{member.name}</h2>
-              <p className="text-sm text-gold-400">{member.role}</p>
+              <p className="text-sm text-purple-400">{member.role}</p>
             </div>
             <p className="text-sm leading-relaxed text-muted">{member.bio}</p>
             <a
               href={`mailto:${member.email}`}
-              className="mt-1 text-sm text-maroon-400 hover:text-maroon-300"
+              className="mt-1 text-sm text-maroon-300 hover:text-maroon-100"
             >
               {member.email}
             </a>

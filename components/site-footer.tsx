@@ -12,7 +12,7 @@ export default function SiteFooter({
         <p>
           <a
             href={`mailto:${society.email}`}
-            className="hover:text-foreground"
+            className="hover:text-purple-300"
           >
             {society.email}
           </a>

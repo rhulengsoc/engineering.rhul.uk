@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { getContent } from "@/lib/content";
 import SiteHeader from "@/components/site-header";
@@ -17,7 +18,7 @@ const geistMono = Geist_Mono({
 
 export const viewport: Viewport = {
   colorScheme: "dark",
-  themeColor: "#0a0a0b",
+  themeColor: "#19191c",
 };
 
 export function generateMetadata(): Metadata {
@@ -44,6 +45,7 @@ export default function RootLayout({
         <SiteHeader shortName={society.shortName} />
         <main className="flex-1">{children}</main>
         <SiteFooter society={society} />
+        <Analytics />
       </body>
     </html>
   );

@@ -341,7 +341,7 @@ export default function AdminEditor({
           <p className="text-sm font-medium text-green-400">{status.message}</p>
         )}
         {status.type === "error" && (
-          <p className="text-sm font-medium text-maroon-400">{status.message}</p>
+          <p className="text-sm font-medium text-maroon-300">{status.message}</p>
         )}
         <button
           onClick={handleSave}

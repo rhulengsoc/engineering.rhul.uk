@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <div>
       <section className="mx-auto flex max-w-5xl flex-col items-start gap-6 border-b border-border px-6 py-24 sm:py-32">
-        <span className="text-sm font-medium text-gold-400">
+        <span className="text-sm font-medium text-purple-400">
           Royal Holloway, University of London
         </span>
         <h1 className="max-w-2xl text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
@@ -23,7 +23,7 @@ export default function Home() {
           </Link>
           <a
             href={`mailto:${society.email}`}
-            className="rounded-md border border-border px-6 py-3 text-sm font-semibold text-foreground transition hover:border-maroon-400"
+            className="rounded-md border border-border-strong px-6 py-3 text-sm font-semibold text-foreground transition hover:border-purple-400"
           >
             Get In Touch
           </a>
@@ -68,7 +68,7 @@ export default function Home() {
         </p>
         <Link
           href="/links"
-          className="mt-6 inline-block rounded-md border border-border px-6 py-3 text-sm font-semibold text-foreground transition hover:border-maroon-400"
+          className="mt-6 inline-block rounded-md border border-border-strong px-6 py-3 text-sm font-semibold text-foreground transition hover:border-purple-400"
         >
           All Our Links
         </Link>

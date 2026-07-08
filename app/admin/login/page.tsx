@@ -52,7 +52,7 @@ export default function AdminLoginPage() {
           required
           className="input py-3"
         />
-        {error && <p className="text-sm text-maroon-400">{error}</p>}
+        {error && <p className="text-sm text-maroon-300">{error}</p>}
         <button
           type="submit"
           disabled={loading}
