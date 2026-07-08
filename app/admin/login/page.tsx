@@ -38,8 +38,8 @@ export default function AdminLoginPage() {
 
   return (
     <div className="mx-auto flex min-h-[70vh] max-w-sm flex-col justify-center px-6 py-16">
-      <h1 className="text-2xl font-bold text-maroon-900">Admin Login</h1>
-      <p className="mt-2 text-sm text-neutral-600">
+      <h1 className="text-2xl font-semibold text-foreground">Admin Login</h1>
+      <p className="mt-2 text-sm text-muted">
         Enter the admin password to edit site content.
       </p>
       <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
@@ -50,13 +50,13 @@ export default function AdminLoginPage() {
           placeholder="Password"
           autoFocus
           required
-          className="rounded-md border border-neutral-300 px-4 py-3 text-sm focus:border-maroon-500 focus:outline-none"
+          className="input py-3"
         />
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <p className="text-sm text-maroon-400">{error}</p>}
         <button
           type="submit"
           disabled={loading}
-          className="rounded-md bg-maroon-800 px-4 py-3 text-sm font-bold text-white transition hover:bg-maroon-700 disabled:opacity-60"
+          className="rounded-md bg-maroon-700 px-4 py-3 text-sm font-semibold text-white transition hover:bg-maroon-600 disabled:opacity-60"
         >
           {loading ? "Signing in…" : "Sign in"}
         </button>

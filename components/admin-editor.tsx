@@ -2,7 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import type { SiteContent, LinkItem, HighlightItem } from "@/lib/types";
+import type {
+  SiteContent,
+  LinkItem,
+  HighlightItem,
+  CommitteeMember,
+} from "@/lib/types";
 
 const ICON_OPTIONS = [
   "instagram",
@@ -46,6 +51,10 @@ export default function AdminEditor({
     setContent((c) => ({ ...c, society: { ...c.society, [key]: value } }));
   }
 
+  function updateCalendar(embedUrl: string) {
+    setContent((c) => ({ ...c, calendar: { ...c.calendar, embedUrl } }));
+  }
+
   function updateHighlight(id: string, patch: Partial<HighlightItem>) {
     setContent((c) => ({
       ...c,
@@ -62,6 +71,30 @@ export default function AdminEditor({
 
   function removeHighlight(id: string) {
     setContent((c) => ({ ...c, highlights: c.highlights.filter((h) => h.id !== id) }));
+  }
+
+  function updateCommitteeMember(id: string, patch: Partial<CommitteeMember>) {
+    setContent((c) => ({
+      ...c,
+      committee: c.committee.map((m) => (m.id === id ? { ...m, ...patch } : m)),
+    }));
+  }
+
+  function addCommitteeMember() {
+    setContent((c) => ({
+      ...c,
+      committee: [
+        ...c.committee,
+        { id: newId(), name: "", role: "", bio: "", email: "" },
+      ],
+    }));
+  }
+
+  function removeCommitteeMember(id: string) {
+    setContent((c) => ({
+      ...c,
+      committee: c.committee.filter((m) => m.id !== id),
+    }));
   }
 
   function updateLink(id: string, patch: Partial<LinkItem>) {
@@ -113,17 +146,14 @@ export default function AdminEditor({
   return (
     <div className="flex flex-col gap-10">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-maroon-900">Site Content</h1>
-        <button
-          onClick={handleLogout}
-          className="rounded-md border border-neutral-300 px-4 py-2 text-sm font-medium hover:bg-neutral-50"
-        >
+        <h1 className="text-2xl font-semibold text-foreground">Site Content</h1>
+        <button onClick={handleLogout} className="btn-secondary">
           Log out
         </button>
       </div>
 
       <section className="flex flex-col gap-4">
-        <h2 className="text-lg font-bold text-maroon-800">Society Info</h2>
+        <h2 className="text-lg font-semibold text-foreground">Society Info</h2>
         <Field label="Name">
           <input
             className="input"
@@ -176,14 +206,31 @@ export default function AdminEditor({
       </section>
 
       <section className="flex flex-col gap-4">
+        <h2 className="text-lg font-semibold text-foreground">Calendar</h2>
+        <Field label="Google Calendar Embed URL">
+          <input
+            className="input"
+            placeholder="https://calendar.google.com/calendar/embed?src=..."
+            value={content.calendar.embedUrl}
+            onChange={(e) => updateCalendar(e.target.value)}
+          />
+        </Field>
+        <p className="text-xs text-muted">
+          In Google Calendar: Settings → select your calendar → &quot;Integrate
+          calendar&quot; → copy the &quot;Public URL to this calendar&quot; and
+          paste it here.
+        </p>
+      </section>
+
+      <section className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold text-maroon-800">Highlights</h2>
+          <h2 className="text-lg font-semibold text-foreground">Highlights</h2>
           <button onClick={addHighlight} className="btn-secondary">
             + Add Highlight
           </button>
         </div>
         {content.highlights.map((h) => (
-          <div key={h.id} className="flex flex-col gap-2 rounded-lg border border-neutral-200 p-4">
+          <div key={h.id} className="flex flex-col gap-2 rounded-lg border border-border p-4">
             <div className="flex items-center gap-2">
               <input
                 className="input"
@@ -207,13 +254,58 @@ export default function AdminEditor({
 
       <section className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold text-maroon-800">Links</h2>
+          <h2 className="text-lg font-semibold text-foreground">Committee</h2>
+          <button onClick={addCommitteeMember} className="btn-secondary">
+            + Add Member
+          </button>
+        </div>
+        {content.committee.map((m) => (
+          <div key={m.id} className="flex flex-col gap-2 rounded-lg border border-border p-4">
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <input
+                className="input"
+                placeholder="Name"
+                value={m.name}
+                onChange={(e) => updateCommitteeMember(m.id, { name: e.target.value })}
+              />
+              <input
+                className="input"
+                placeholder="Role"
+                value={m.role}
+                onChange={(e) => updateCommitteeMember(m.id, { role: e.target.value })}
+              />
+              <input
+                className="input"
+                placeholder="Email"
+                value={m.email}
+                onChange={(e) => updateCommitteeMember(m.id, { email: e.target.value })}
+              />
+              <button
+                onClick={() => removeCommitteeMember(m.id)}
+                className="btn-danger sm:w-auto"
+              >
+                Remove
+              </button>
+            </div>
+            <textarea
+              className="input"
+              placeholder="Bio"
+              value={m.bio}
+              onChange={(e) => updateCommitteeMember(m.id, { bio: e.target.value })}
+            />
+          </div>
+        ))}
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-foreground">Links</h2>
           <button onClick={addLink} className="btn-secondary">
             + Add Link
           </button>
         </div>
         {content.links.map((l) => (
-          <div key={l.id} className="flex flex-col gap-2 rounded-lg border border-neutral-200 p-4 sm:flex-row sm:items-center">
+          <div key={l.id} className="flex flex-col gap-2 rounded-lg border border-border p-4 sm:flex-row sm:items-center">
             <input
               className="input"
               placeholder="Label"
@@ -244,17 +336,17 @@ export default function AdminEditor({
         ))}
       </section>
 
-      <div className="sticky bottom-0 flex flex-col gap-2 border-t border-neutral-200 bg-white py-4">
+      <div className="sticky bottom-0 flex flex-col gap-2 border-t border-border bg-background py-4">
         {status.type === "success" && (
-          <p className="text-sm font-medium text-green-700">{status.message}</p>
+          <p className="text-sm font-medium text-green-400">{status.message}</p>
         )}
         {status.type === "error" && (
-          <p className="text-sm font-medium text-red-600">{status.message}</p>
+          <p className="text-sm font-medium text-maroon-400">{status.message}</p>
         )}
         <button
           onClick={handleSave}
           disabled={status.type === "saving"}
-          className="rounded-md bg-maroon-800 px-6 py-3 text-sm font-bold text-white transition hover:bg-maroon-700 disabled:opacity-60"
+          className="rounded-md bg-maroon-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-maroon-600 disabled:opacity-60"
         >
           {status.type === "saving" ? "Saving…" : "Save Changes"}
         </button>
@@ -266,7 +358,7 @@ export default function AdminEditor({
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="flex flex-col gap-1">
-      <span className="text-sm font-medium text-neutral-700">{label}</span>
+      <span className="text-sm font-medium text-muted">{label}</span>
       {children}
     </label>
   );

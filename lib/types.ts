@@ -11,6 +11,14 @@ export type HighlightItem = {
   description: string;
 };
 
+export type CommitteeMember = {
+  id: string;
+  name: string;
+  role: string;
+  bio: string;
+  email: string;
+};
+
 export type SiteContent = {
   society: {
     name: string;
@@ -21,6 +29,10 @@ export type SiteContent = {
     email: string;
     instagramHandle: string;
   };
+  calendar: {
+    embedUrl: string;
+  };
   highlights: HighlightItem[];
+  committee: CommitteeMember[];
   links: LinkItem[];
 };

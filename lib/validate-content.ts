@@ -23,11 +23,30 @@ export function validateSiteContent(value: unknown): value is SiteContent {
     if (!isString(society[field])) return false;
   }
 
+  const calendar = v.calendar as Record<string, unknown> | undefined;
+  if (!calendar || typeof calendar !== "object") return false;
+  if (!isString(calendar.embedUrl)) return false;
+
   if (!Array.isArray(v.highlights)) return false;
   for (const item of v.highlights) {
     if (!item || typeof item !== "object") return false;
     const h = item as Record<string, unknown>;
     if (!isString(h.id) || !isString(h.title) || !isString(h.description)) {
+      return false;
+    }
+  }
+
+  if (!Array.isArray(v.committee)) return false;
+  for (const item of v.committee) {
+    if (!item || typeof item !== "object") return false;
+    const c = item as Record<string, unknown>;
+    if (
+      !isString(c.id) ||
+      !isString(c.name) ||
+      !isString(c.role) ||
+      !isString(c.bio) ||
+      !isString(c.email)
+    ) {
       return false;
     }
   }

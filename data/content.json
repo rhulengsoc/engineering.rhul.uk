@@ -8,6 +8,9 @@
     "email": "engsoc@su.rhul.ac.uk",
     "instagramHandle": "@rhulengsoc"
   },
+  "calendar": {
+    "embedUrl": ""
+  },
   "highlights": [
     {
       "id": "workshops",
@@ -28,6 +31,36 @@
       "id": "socials",
       "title": "Socials",
       "description": "Because engineering is more fun with people. Regular socials to meet the rest of the society."
+    }
+  ],
+  "committee": [
+    {
+      "id": "president",
+      "name": "TBC",
+      "role": "President",
+      "bio": "Leads the society and sets the direction for the year.",
+      "email": "engsoc@su.rhul.ac.uk"
+    },
+    {
+      "id": "vice-president",
+      "name": "TBC",
+      "role": "Vice President",
+      "bio": "Supports the president and helps run day-to-day operations.",
+      "email": "engsoc@su.rhul.ac.uk"
+    },
+    {
+      "id": "treasurer",
+      "name": "TBC",
+      "role": "Treasurer",
+      "bio": "Manages the society's budget, sponsorships, and expenses.",
+      "email": "engsoc@su.rhul.ac.uk"
+    },
+    {
+      "id": "events",
+      "name": "TBC",
+      "role": "Events Officer",
+      "bio": "Organises workshops, talks, and socials throughout the year.",
+      "email": "engsoc@su.rhul.ac.uk"
     }
   ],
   "links": [

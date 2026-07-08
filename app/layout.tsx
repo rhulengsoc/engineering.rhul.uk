@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { getContent } from "@/lib/content";
@@ -14,6 +14,11 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+export const viewport: Viewport = {
+  colorScheme: "dark",
+  themeColor: "#0a0a0b",
+};
 
 export function generateMetadata(): Metadata {
   const { society } = getContent();
