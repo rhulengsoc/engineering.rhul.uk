@@ -36,7 +36,7 @@
   "committee": [
     {
       "id": "president",
-      "name": "TBC",
+      "name": "Henry Li",
       "role": "President",
       "bio": "Leads the society and sets the direction for the year.",
       "email": "engsoc@su.rhul.ac.uk"
@@ -44,7 +44,7 @@
     {
       "id": "vice-president",
       "name": "TBC",
-      "role": "Vice President",
+      "role": "Sec",
       "bio": "Supports the president and helps run day-to-day operations.",
       "email": "engsoc@su.rhul.ac.uk"
     },
