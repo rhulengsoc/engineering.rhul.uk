@@ -1,13 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --background: #19191c;
-  --foreground: #f5f5f4;
+  /* Warm indigo dark palette — deliberately not pure black */
+  --background: #1e1e2e;
+  --foreground: #e6e9f5;
 
-  --color-surface: #232327;
-  --color-border: #2f2f35;
-  --color-border-strong: #71717a;
-  --color-muted: #a1a1aa;
+  --color-surface: #27273a;
+  --color-surface-2: #313148;
+  --color-border: #3b3b54;
+  --color-border-strong: #6c7086;
+  --color-muted: #a6adc8;
 
   --color-maroon-950: #2b0a14;
   --color-maroon-900: #4a0f22;
@@ -16,9 +18,9 @@
   --color-maroon-600: #a51d44;
   --color-maroon-500: #bc2451;
   --color-maroon-400: #cc4d72;
-  --color-maroon-300: #d98aa4;
+  --color-maroon-300: #e394ad;
+  --color-maroon-200: #f0bccb;
   --color-maroon-100: #f6e6ea;
-  --color-maroon-50: #fbf2f4;
 
   --color-purple-600: #7c3aed;
   --color-purple-500: #8b5cf6;
@@ -32,8 +34,10 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-display);
 
   --color-surface: var(--color-surface);
+  --color-surface-2: var(--color-surface-2);
   --color-border: var(--color-border);
   --color-border-strong: var(--color-border-strong);
   --color-muted: var(--color-muted);
@@ -46,8 +50,8 @@
   --color-maroon-500: var(--color-maroon-500);
   --color-maroon-400: var(--color-maroon-400);
   --color-maroon-300: var(--color-maroon-300);
+  --color-maroon-200: var(--color-maroon-200);
   --color-maroon-100: var(--color-maroon-100);
-  --color-maroon-50: var(--color-maroon-50);
 
   --color-purple-600: var(--color-purple-600);
   --color-purple-500: var(--color-purple-500);
@@ -61,14 +65,100 @@ body {
   color: var(--foreground);
 }
 
+::selection {
+  background: var(--color-purple-600);
+  color: #ffffff;
+}
+
 @layer components {
+  .font-display {
+    font-family: var(--font-display), var(--font-geist-sans), sans-serif;
+  }
+
+  /* Blueprint grid backdrop */
+  .grid-bg {
+    background-image:
+      linear-gradient(to right, rgba(167, 139, 250, 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(167, 139, 250, 0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+  }
+
+  /* Soft glows as pure gradients — no filter: blur, which can stall
+     low-end rasterizers when painted over large areas */
+  .glow-purple {
+    background: radial-gradient(
+      circle closest-side,
+      rgba(124, 58, 237, 0.25),
+      rgba(124, 58, 237, 0.07) 55%,
+      transparent 75%
+    );
+  }
+  .glow-maroon {
+    background: radial-gradient(
+      circle closest-side,
+      rgba(188, 36, 81, 0.2),
+      rgba(188, 36, 81, 0.06) 55%,
+      transparent 75%
+    );
+  }
+
+  .gradient-text {
+    background: linear-gradient(100deg, var(--color-maroon-300), var(--color-purple-300));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .eyebrow {
+    @apply font-mono text-xs font-medium uppercase tracking-[0.2em] text-purple-300;
+  }
+
+  .card {
+    @apply rounded-2xl border border-border bg-surface transition duration-300;
+  }
+  .card-hover {
+    @apply hover:-translate-y-1 hover:border-purple-400/60 hover:shadow-[0_8px_40px_-12px_rgba(124,58,237,0.35)];
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-maroon-600 to-purple-600 px-6 py-3 text-sm font-semibold text-white transition duration-300 hover:brightness-115 hover:shadow-[0_4px_24px_-4px_rgba(124,58,237,0.5)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-border-strong px-6 py-3 text-sm font-semibold text-foreground transition duration-300 hover:border-purple-400 hover:text-purple-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400;
+  }
+
   .input {
-    @apply w-full rounded-md border border-border-strong bg-surface px-3 py-2 text-sm text-foreground placeholder-muted focus:border-purple-400 focus:outline-none;
+    @apply w-full rounded-lg border border-border-strong bg-surface px-3 py-2 text-sm text-foreground placeholder-muted focus:border-purple-400 focus:outline-none;
   }
   .btn-secondary {
-    @apply rounded-md border border-border-strong px-3 py-1.5 text-sm font-medium text-foreground hover:border-purple-400 hover:text-purple-300;
+    @apply rounded-lg border border-border-strong px-3 py-1.5 text-sm font-medium text-foreground transition hover:border-purple-400 hover:text-purple-200;
   }
   .btn-danger {
-    @apply shrink-0 rounded-md border border-border-strong px-3 py-2 text-sm font-medium text-maroon-300 hover:border-maroon-400;
+    @apply shrink-0 rounded-lg border border-border-strong px-3 py-2 text-sm font-medium text-maroon-300 transition hover:border-maroon-400;
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }

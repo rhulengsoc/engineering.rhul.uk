@@ -1,5 +1,13 @@
 const CONTENT_PATH = "data/content.json";
 
+function apiHeaders(token: string) {
+  return {
+    Authorization: `Bearer ${token}`,
+    Accept: "application/vnd.github+json",
+    "X-GitHub-Api-Version": "2022-11-28",
+  };
+}
+
 function getConfig() {
   const token = process.env.GITHUB_TOKEN;
   const repo = process.env.GITHUB_REPO;
@@ -18,17 +26,37 @@ function toBase64(str: string): string {
   return Buffer.from(str, "utf-8").toString("base64");
 }
 
+export async function commitNewFile(
+  repoPath: string,
+  base64Content: string,
+  commitMessage: string
+): Promise<void> {
+  const { token, repo, branch } = getConfig();
+  const url = `https://api.github.com/repos/${repo}/contents/${repoPath}`;
+
+  const res = await fetch(url, {
+    method: "PUT",
+    headers: { ...apiHeaders(token), "Content-Type": "application/json" },
+    body: JSON.stringify({
+      message: commitMessage,
+      content: base64Content,
+      branch,
+    }),
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Failed to commit file to GitHub: ${res.status} ${text}`);
+  }
+}
+
 export async function commitContentJson(
   contentObject: unknown,
   commitMessage: string
 ): Promise<void> {
   const { token, repo, branch } = getConfig();
   const apiBase = `https://api.github.com/repos/${repo}/contents/${CONTENT_PATH}`;
-  const headers = {
-    Authorization: `Bearer ${token}`,
-    Accept: "application/vnd.github+json",
-    "X-GitHub-Api-Version": "2022-11-28",
-  };
+  const headers = apiHeaders(token);
 
   const getRes = await fetch(`${apiBase}?ref=${branch}`, { headers });
   if (!getRes.ok) {

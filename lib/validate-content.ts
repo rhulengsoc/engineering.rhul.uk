@@ -49,6 +49,7 @@ export function validateSiteContent(value: unknown): value is SiteContent {
     ) {
       return false;
     }
+    if (c.photo !== undefined && !isString(c.photo)) return false;
   }
 
   if (!Array.isArray(v.links)) return false;

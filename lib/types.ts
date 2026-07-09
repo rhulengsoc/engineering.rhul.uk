@@ -17,6 +17,7 @@ export type CommitteeMember = {
   role: string;
   bio: string;
   email: string;
+  photo: string;
 };
 
 export type SiteContent = {

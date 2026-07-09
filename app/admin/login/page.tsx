@@ -38,7 +38,7 @@ export default function AdminLoginPage() {
 
   return (
     <div className="mx-auto flex min-h-[70vh] max-w-sm flex-col justify-center px-6 py-16">
-      <h1 className="text-2xl font-semibold text-foreground">Admin Login</h1>
+      <h1 className="font-display text-2xl font-bold text-foreground">Admin Login</h1>
       <p className="mt-2 text-sm text-muted">
         Enter the admin password to edit site content.
       </p>
@@ -56,7 +56,7 @@ export default function AdminLoginPage() {
         <button
           type="submit"
           disabled={loading}
-          className="rounded-md bg-maroon-700 px-4 py-3 text-sm font-semibold text-white transition hover:bg-maroon-600 disabled:opacity-60"
+          className="btn-primary disabled:opacity-60"
         >
           {loading ? "Signing in…" : "Sign in"}
         </button>

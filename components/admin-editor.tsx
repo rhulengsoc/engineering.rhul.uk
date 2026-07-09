@@ -1,7 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { ImagePlus, Trash2 } from "lucide-react";
+import { resizeImageToDataUrl } from "@/lib/resize-image";
 import type {
   SiteContent,
   LinkItem,
@@ -43,6 +46,11 @@ export default function AdminEditor({
   const [status, setStatus] = useState<
     { type: "idle" } | { type: "saving" } | { type: "success"; message: string } | { type: "error"; message: string }
   >({ type: "idle" });
+  // Session-local previews so a freshly uploaded photo shows immediately,
+  // before the redeploy makes its /uploads path resolvable.
+  const [photoPreviews, setPhotoPreviews] = useState<Record<string, string>>({});
+  const [uploading, setUploading] = useState<Record<string, boolean>>({});
+  const fileInputs = useRef<Record<string, HTMLInputElement | null>>({});
 
   function updateSociety<K extends keyof SiteContent["society"]>(
     key: K,
@@ -85,7 +93,7 @@ export default function AdminEditor({
       ...c,
       committee: [
         ...c.committee,
-        { id: newId(), name: "", role: "", bio: "", email: "" },
+        { id: newId(), name: "", role: "", bio: "", email: "", photo: "" },
       ],
     }));
   }
@@ -95,6 +103,40 @@ export default function AdminEditor({
       ...c,
       committee: c.committee.filter((m) => m.id !== id),
     }));
+  }
+
+  async function handlePhotoSelect(memberId: string, file: File) {
+    setStatus({ type: "idle" });
+    setUploading((u) => ({ ...u, [memberId]: true }));
+    try {
+      const dataUrl = await resizeImageToDataUrl(file);
+      const res = await fetch("/api/admin/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ dataUrl }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setStatus({ type: "error", message: data.error ?? "Photo upload failed" });
+        return;
+      }
+      setPhotoPreviews((p) => ({ ...p, [memberId]: dataUrl }));
+      updateCommitteeMember(memberId, { photo: data.path });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Photo upload failed";
+      setStatus({ type: "error", message });
+    } finally {
+      setUploading((u) => ({ ...u, [memberId]: false }));
+    }
+  }
+
+  function removePhoto(memberId: string) {
+    setPhotoPreviews((p) => {
+      const next = { ...p };
+      delete next[memberId];
+      return next;
+    });
+    updateCommitteeMember(memberId, { photo: "" });
   }
 
   function updateLink(id: string, patch: Partial<LinkItem>) {
@@ -146,14 +188,18 @@ export default function AdminEditor({
   return (
     <div className="flex flex-col gap-10">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-foreground">Site Content</h1>
+        <h1 className="font-display text-2xl font-bold text-foreground">
+          Site Content
+        </h1>
         <button onClick={handleLogout} className="btn-secondary">
           Log out
         </button>
       </div>
 
       <section className="flex flex-col gap-4">
-        <h2 className="text-lg font-semibold text-foreground">Society Info</h2>
+        <h2 className="font-display text-lg font-semibold text-foreground">
+          Society Info
+        </h2>
         <Field label="Name">
           <input
             className="input"
@@ -206,7 +252,9 @@ export default function AdminEditor({
       </section>
 
       <section className="flex flex-col gap-4">
-        <h2 className="text-lg font-semibold text-foreground">Calendar</h2>
+        <h2 className="font-display text-lg font-semibold text-foreground">
+          Calendar
+        </h2>
         <Field label="Google Calendar Embed URL">
           <input
             className="input"
@@ -224,13 +272,15 @@ export default function AdminEditor({
 
       <section className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-foreground">Highlights</h2>
+          <h2 className="font-display text-lg font-semibold text-foreground">
+            Highlights
+          </h2>
           <button onClick={addHighlight} className="btn-secondary">
             + Add Highlight
           </button>
         </div>
         {content.highlights.map((h) => (
-          <div key={h.id} className="flex flex-col gap-2 rounded-lg border border-border p-4">
+          <div key={h.id} className="flex flex-col gap-2 rounded-xl border border-border bg-surface/60 p-4">
             <div className="flex items-center gap-2">
               <input
                 className="input"
@@ -254,58 +304,122 @@ export default function AdminEditor({
 
       <section className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-foreground">Committee</h2>
+          <h2 className="font-display text-lg font-semibold text-foreground">
+            Committee
+          </h2>
           <button onClick={addCommitteeMember} className="btn-secondary">
             + Add Member
           </button>
         </div>
-        {content.committee.map((m) => (
-          <div key={m.id} className="flex flex-col gap-2 rounded-lg border border-border p-4">
-            <div className="flex flex-col gap-2 sm:flex-row">
-              <input
+        {content.committee.map((m) => {
+          const preview = photoPreviews[m.id] || m.photo;
+          const isUploading = uploading[m.id];
+          return (
+            <div key={m.id} className="flex flex-col gap-3 rounded-xl border border-border bg-surface/60 p-4">
+              <div className="flex items-center gap-4">
+                <div className="shrink-0 rounded-full bg-gradient-to-br from-maroon-600 to-purple-600 p-[2px]">
+                  {preview ? (
+                    <Image
+                      src={preview}
+                      alt={m.name || "Committee member photo"}
+                      width={56}
+                      height={56}
+                      unoptimized
+                      className="h-14 w-14 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-surface-2 text-muted">
+                      <ImagePlus className="h-5 w-5" />
+                    </div>
+                  )}
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <input
+                    ref={(el) => {
+                      fileInputs.current[m.id] = el;
+                    }}
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) handlePhotoSelect(m.id, file);
+                      e.target.value = "";
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => fileInputs.current[m.id]?.click()}
+                    disabled={isUploading}
+                    className="btn-secondary inline-flex items-center gap-2 disabled:opacity-60"
+                  >
+                    <ImagePlus className="h-4 w-4" />
+                    {isUploading
+                      ? "Uploading…"
+                      : preview
+                        ? "Change Photo"
+                        : "Upload Photo"}
+                  </button>
+                  {preview && !isUploading && (
+                    <button
+                      type="button"
+                      onClick={() => removePhoto(m.id)}
+                      className="btn-danger inline-flex items-center gap-2"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      Remove Photo
+                    </button>
+                  )}
+                </div>
+              </div>
+              <div className="flex flex-col gap-2 sm:flex-row">
+                <input
+                  className="input"
+                  placeholder="Name"
+                  value={m.name}
+                  onChange={(e) => updateCommitteeMember(m.id, { name: e.target.value })}
+                />
+                <input
+                  className="input"
+                  placeholder="Role"
+                  value={m.role}
+                  onChange={(e) => updateCommitteeMember(m.id, { role: e.target.value })}
+                />
+                <input
+                  className="input"
+                  placeholder="Email"
+                  value={m.email}
+                  onChange={(e) => updateCommitteeMember(m.id, { email: e.target.value })}
+                />
+                <button
+                  onClick={() => removeCommitteeMember(m.id)}
+                  className="btn-danger sm:w-auto"
+                >
+                  Remove
+                </button>
+              </div>
+              <textarea
                 className="input"
-                placeholder="Name"
-                value={m.name}
-                onChange={(e) => updateCommitteeMember(m.id, { name: e.target.value })}
+                placeholder="Bio"
+                value={m.bio}
+                onChange={(e) => updateCommitteeMember(m.id, { bio: e.target.value })}
               />
-              <input
-                className="input"
-                placeholder="Role"
-                value={m.role}
-                onChange={(e) => updateCommitteeMember(m.id, { role: e.target.value })}
-              />
-              <input
-                className="input"
-                placeholder="Email"
-                value={m.email}
-                onChange={(e) => updateCommitteeMember(m.id, { email: e.target.value })}
-              />
-              <button
-                onClick={() => removeCommitteeMember(m.id)}
-                className="btn-danger sm:w-auto"
-              >
-                Remove
-              </button>
             </div>
-            <textarea
-              className="input"
-              placeholder="Bio"
-              value={m.bio}
-              onChange={(e) => updateCommitteeMember(m.id, { bio: e.target.value })}
-            />
-          </div>
-        ))}
+          );
+        })}
       </section>
 
       <section className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-foreground">Links</h2>
+          <h2 className="font-display text-lg font-semibold text-foreground">
+            Links
+          </h2>
           <button onClick={addLink} className="btn-secondary">
             + Add Link
           </button>
         </div>
         {content.links.map((l) => (
-          <div key={l.id} className="flex flex-col gap-2 rounded-lg border border-border p-4 sm:flex-row sm:items-center">
+          <div key={l.id} className="flex flex-col gap-2 rounded-xl border border-border bg-surface/60 p-4 sm:flex-row sm:items-center">
             <input
               className="input"
               placeholder="Label"
@@ -346,7 +460,7 @@ export default function AdminEditor({
         <button
           onClick={handleSave}
           disabled={status.type === "saving"}
-          className="rounded-md bg-maroon-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-maroon-600 disabled:opacity-60"
+          className="btn-primary disabled:opacity-60"
         >
           {status.type === "saving" ? "Saving…" : "Save Changes"}
         </button>
