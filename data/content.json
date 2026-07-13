@@ -38,32 +38,48 @@
       "id": "president",
       "name": "Henry Li",
       "role": "President",
-      "bio": "Leads the society and sets the direction for the year.",
+      "bio": "",
       "email": "zmee034@live.rhul.ac.uk",
-      "photo": ""
+      "photo": "/uploads/1783924982043-aiwirk.jpg"
     },
     {
       "id": "vice-president",
-      "name": "TBC",
-      "role": "Sec",
-      "bio": "Supports the president and helps run day-to-day operations.",
-      "email": "engsoc@su.rhul.ac.uk",
+      "name": "Conor Strickland",
+      "role": "Secretary",
+      "bio": "",
+      "email": "znee001@live.rhul.ac.uk",
       "photo": ""
     },
     {
       "id": "treasurer",
-      "name": "TBC",
+      "name": "Matt Godwin",
       "role": "Treasurer",
-      "bio": "Manages the society's budget, sponsorships, and expenses.",
-      "email": "engsoc@su.rhul.ac.uk",
+      "bio": "",
+      "email": "znee008@live.rhul.ac.uk",
       "photo": ""
     },
     {
       "id": "events",
-      "name": "TBC",
-      "role": "Events Officer",
-      "bio": "Organises workshops, talks, and socials throughout the year.",
-      "email": "engsoc@su.rhul.ac.uk",
+      "name": "Ludan Al Awad",
+      "role": "Events Manager",
+      "bio": "",
+      "email": "zpee041@live.rhul.ac.uk",
+      "photo": ""
+    },
+    {
+      "id": "0c228edc-d9fb-4b8d-a203-d4d487ecccf8",
+      "name": "Lucas Davey",
+      "role": "Community Manager",
+      "bio": "",
+      "email": "znee052@live.rhul.ac.uk",
+      "photo": ""
+    },
+    {
+      "id": "093dc910-e96f-405d-819a-a4e33671ea83",
+      "name": "Saanvi Choudhary",
+      "role": "Wellbeing Secretary",
+      "bio": "",
+      "email": "zptl871@live.rhul.ac.uk",
       "photo": ""
     }
   ],
